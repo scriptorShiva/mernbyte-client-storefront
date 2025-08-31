@@ -1,9 +1,29 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProductCard, { Product } from "./components/ProductCard";
 
 export default function Home() {
+  // product list rought structure
+  const productList: Product[] = [
+    {
+      id: "1",
+      name: "product A",
+      description: "describe",
+      image: "./hero.png",
+      price: 10,
+    },
+    {
+      id: "2",
+      name: "product B",
+      description: "describe",
+      image: "./hero.png",
+      price: 12,
+    },
+  ];
   return (
     <>
+      {/* section A */}
       <section className="bg-white">
         <div className="container mx-auto flex items-center justify-between px-[50px]">
           {/* left */}
@@ -19,7 +39,7 @@ export default function Home() {
               className="mt-8 text-lg rounded-full py-7 px-6 font-bold cursor-pointer"
               size={"lg"}
             >
-              Shop Nearby
+              Explore Around You
             </Button>
           </div>
           {/* right */}
@@ -27,6 +47,30 @@ export default function Home() {
             <Image width={"700"} height={"700"} src={"/hero.png"} alt="hero" />
           </div>
         </div>
+      </section>
+
+      {/* section B */}
+      <section className="container mx-auto mt-10">
+        <Tabs defaultValue="category-a">
+          <TabsList className="space-x-8 bg-orange-300">
+            <TabsTrigger value="category-a">Category A</TabsTrigger>
+            <TabsTrigger value="category-b">Category B</TabsTrigger>
+          </TabsList>
+          <TabsContent value="category-a">
+            <div className="grid grid-cols-4 gap-6 mt-6">
+              {productList && productList.length > 0 ? (
+                productList.map((product) => {
+                  return <ProductCard key={product.id} product={product} />;
+                })
+              ) : (
+                <p>No products available</p>
+              )}
+            </div>
+          </TabsContent>
+          <TabsContent value="category-b">
+            Make changes to your category-b here.
+          </TabsContent>
+        </Tabs>
       </section>
     </>
   );

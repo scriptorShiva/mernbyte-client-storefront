@@ -23,7 +23,9 @@ const Navbar = () => {
             width={"100"}
             height={"100"}
           />
-          <span className="font-bold text-gray-600 ">localmart</span>
+          <span className="font-bold text-gray-600 ">
+            <span className="text-primary">monk</span>Market
+          </span>
           <div className="px-4">
             <Select>
               <SelectTrigger className="w-[180px]">
