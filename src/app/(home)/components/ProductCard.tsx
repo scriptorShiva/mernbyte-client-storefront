@@ -14,6 +14,8 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RadioGroupSelector from "@/components/custom/RadioGroup";
 import { useState } from "react";
 import ToppingsCheckboxGroup from "./ToppingsCheckboxGroup";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart } from "lucide-react";
 
 export type Product = {
   id: string;
@@ -53,14 +55,14 @@ const ProductCard = ({ product }: PropTypes) => {
               Choose
             </DialogTrigger>
             <DialogContent className="max-w-3xl p-0 m-0">
-              <div className="flex gap-6">
+              <div className="flex gap-6 h-full">
                 {/* left-section */}
-                <div className="h-[400px] bg-white flex justify-center align-center w-2/3 rounded-l-xl ">
+                <div className="bg-white flex justify-center items-center w-2/3 h-full rounded-l-xl">
                   <Image
                     src="/logo.png"
                     alt={product.name}
                     width={150}
-                    height={150}
+                    height={200}
                     className="object-contain"
                   />
                 </div>
@@ -125,7 +127,18 @@ const ProductCard = ({ product }: PropTypes) => {
                     />
                   </section>
 
-                  <section className="mt-6"></section>
+                  <section className="mt-8 mb-4 flex justify-between align-center">
+                    <div>
+                      <span className="font-medium">Price:</span>
+                      <span className="font-medium"> ₹{product.price}</span>
+                    </div>
+                    <div>
+                      <Button size={"sm"} className="cursor-pointer">
+                        <ShoppingCart />
+                        <span className="font-medium">Add to Cart</span>
+                      </Button>
+                    </div>
+                  </section>
                 </div>
               </div>
             </DialogContent>

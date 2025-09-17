@@ -71,7 +71,7 @@ export default function Home() {
         <div className="container mx-auto flex items-center justify-between px-[50px]">
           {/* left */}
           <div>
-            <h1 className="text-6xl font-black font-sans ">
+            <h1 className="text-6xl font-black font-sans">
               Everything You Need <br />{" "}
               <span className="text-primary">Around the Corner</span>
             </h1>

@@ -21,7 +21,7 @@ const ToppingsCheckboxGroup = ({ name, options, value, onChange }: Props) => {
             <div className="flex items-center">
               <Button
                 className={cn(
-                  "p-0 m-0 h-auto w-[80px] rounded-md cursor-pointer font-normal border-2 transition-all",
+                  "p-0 m-0 h-auto rounded-md cursor-pointer font-normal border-2 transition-all",
                   value.includes(option.value)
                     ? "border-orange-500"
                     : "bg-transparent text-black hover:border-orange-600"
