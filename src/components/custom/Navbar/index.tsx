@@ -9,8 +9,25 @@ import {
 } from "@/components/ui/select";
 import { MapPinHouse, ShoppingBasket } from "lucide-react";
 import Link from "next/link";
+import { Store } from "@/lib/types";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const storeRes = await fetch(
+    `${process.env.BACKEND_URL}/kong/api/auth/tenants`,
+    {
+      next: {
+        revalidate: 3600, // 1hour
+      },
+    }
+  );
+
+  // this is a dagerous step as sometimes data is not serialized or some error data came and we render it , so we have to fix that.
+  // fix
+  if (!storeRes.ok) {
+    throw new Error("Failed to fetch stores");
+  }
+  const stores: { data: Store[] } = await storeRes.json();
+
   return (
     <header className="bg-white shadow">
       <nav className="container mx-auto flex items-center justify-between py-4 px-[100px]">
@@ -32,9 +49,15 @@ const Navbar = () => {
                 <SelectValue placeholder="Select Stores" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="store-a">Store A</SelectItem>
-                <SelectItem value="store-b">Store B</SelectItem>
-                <SelectItem value="store-c">Store C</SelectItem>
+                {stores.data.map((store: Store) => (
+                  <SelectItem
+                    className="cursor-pointer"
+                    key={store.id}
+                    value={store.id}
+                  >
+                    {store.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
