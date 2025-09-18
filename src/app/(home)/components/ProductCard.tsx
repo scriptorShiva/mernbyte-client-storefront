@@ -16,14 +16,7 @@ import { useState } from "react";
 import ToppingsCheckboxGroup from "./ToppingsCheckboxGroup";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-
-export type Product = {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  price: number;
-};
+import { Product } from "@/lib/types";
 
 type PropTypes = {
   product: Product;
@@ -36,9 +29,16 @@ const ProductCard = ({ product }: PropTypes) => {
   return (
     <div>
       <Card className="border-none rounded-xl">
-        <CardHeader className="flex items-center justify-center">
+        <CardHeader className="flex items-center justify-center h-[200px]">
           {/* Use numbers for width and height */}
-          <Image src="/logo.png" alt={product.id} width={150} height={150} />
+          <Image
+            src={product.imageUrl}
+            alt={product._id}
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="w-full h-full object-contain"
+          />
         </CardHeader>
         <CardContent>
           <CardTitle>{product.name}</CardTitle>
@@ -47,7 +47,7 @@ const ProductCard = ({ product }: PropTypes) => {
         <CardFooter className="flex justify-between">
           <p>
             <span className="text-sm">From</span>
-            <span className="font-bold"> ₹{product.price}</span>
+            <span className="font-bold"> ₹{100}</span>
           </p>
           {/* Dialog box */}
           <Dialog>
@@ -59,8 +59,8 @@ const ProductCard = ({ product }: PropTypes) => {
                 {/* left-section */}
                 <div className="bg-white flex justify-center items-center w-2/3 h-full rounded-l-xl">
                   <Image
-                    src="/logo.png"
-                    alt={product.name}
+                    src={product.imageUrl}
+                    alt={`${product.name}`}
                     width={150}
                     height={200}
                     className="object-contain"
@@ -130,7 +130,7 @@ const ProductCard = ({ product }: PropTypes) => {
                   <section className="mt-8 mb-4 flex justify-between align-center">
                     <div>
                       <span className="font-medium">Price:</span>
-                      <span className="font-medium"> ₹{product.price}</span>
+                      <span className="font-medium"> ₹{100}</span>
                     </div>
                     <div>
                       <Button size={"sm"} className="cursor-pointer">

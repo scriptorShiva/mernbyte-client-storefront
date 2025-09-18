@@ -13,7 +13,7 @@ import { Store } from "@/lib/types";
 
 const Navbar = async () => {
   const storeRes = await fetch(
-    `${process.env.BACKEND_URL}/kong/api/auth/tenants`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/kong/api/auth/tenants`,
     {
       next: {
         revalidate: 3600, // 1hour
