@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ToppingsCheckboxGroup from "./ToppingsCheckboxGroup";
+import AddOnsCheckboxGroup from "./AddOnsCheckboxGroup";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -8,9 +8,10 @@ import Image from "next/image";
 import { Product } from "@/lib/types";
 
 const ProductDialog = ({ product }: { product: Product }) => {
+  console.log(product.toppings);
   const [size, setSize] = useState("");
 
-  const [toppings, setToppings] = useState<string[]>([]);
+  const [AddOns, setAddOns] = useState<string[]>([]);
   return (
     <div>
       {/* Dialog box */}
@@ -23,7 +24,7 @@ const ProductDialog = ({ product }: { product: Product }) => {
         <DialogContent className="max-w-3xl p-0 m-0">
           <div className="flex gap-6 h-full">
             {/* left-section */}
-            <div className="bg-white flex justify-center items-center w-2/3 h-full rounded-l-xl">
+            <div className="bg-white flex justify-center items-center w-2/3 h-full rounded-l-xl px-2">
               <Image
                 src={product.imageUrl}
                 alt={`${product.name}`}
@@ -34,54 +35,46 @@ const ProductDialog = ({ product }: { product: Product }) => {
             </div>
 
             {/* right section */}
-            <div className="m-2">
+            <div className=" flex flex-col m-2 w-full">
               <section>
                 <div className=" text-xl font-bold">{product.name}</div>
                 <div className="text-sm">{product.description}</div>
               </section>
 
-              {Object.entries(product.priceConfiguration).map(
-                ([key, value]) => (
-                  <section className="mt-6" key={key}>
-                    <RadioGroupSelector
-                      name={`Choose the ${key}`}
-                      options={Object.keys(value.availableOptions).map((k) => ({
-                        value: k,
-                        label: k,
+              <section className="flex-1 overflow-y-auto pr-2 scrollbar-thin">
+                {Object.entries(product.priceConfiguration).map(
+                  ([key, value]) => (
+                    <section className="mt-6" key={key}>
+                      <RadioGroupSelector
+                        name={`Choose the ${key}`}
+                        options={Object.keys(value.availableOptions).map(
+                          (k) => ({
+                            value: k,
+                            label: k,
+                          })
+                        )}
+                        value={size}
+                        onChange={setSize}
+                      />
+                    </section>
+                  )
+                )}
+
+                {product.toppings && product.toppings.length > 0 && (
+                  <section className="mt-6 h-full">
+                    <AddOnsCheckboxGroup
+                      name="AddOns"
+                      options={product.toppings.map((topping) => ({
+                        value: topping._id,
+                        label: topping.name,
+                        image: topping.image,
+                        price: topping.price,
                       }))}
-                      value={size}
-                      onChange={setSize}
+                      value={AddOns}
+                      onChange={setAddOns}
                     />
                   </section>
-                )
-              )}
-
-              <section className="mt-6">
-                <ToppingsCheckboxGroup
-                  name="Toppings"
-                  options={[
-                    {
-                      value: "cheeze",
-                      label: "Cheeze",
-                      image: "/logo.png",
-                      price: 5,
-                    },
-                    {
-                      value: "paneer",
-                      label: "Paneer",
-                      image: "/logo.png",
-                      price: 10,
-                    },
-                    {
-                      value: "soyabean",
-                      label: "Soyabean",
-                      image: "/logo.png",
-                      price: 15,
-                    },
-                  ]}
-                  value={toppings}
-                  onChange={setToppings}
-                />
+                )}
               </section>
 
               <section className="mt-8 mb-4 flex justify-between align-center">

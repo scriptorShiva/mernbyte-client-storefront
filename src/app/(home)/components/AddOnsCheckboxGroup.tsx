@@ -11,7 +11,7 @@ interface Props {
   onChange: (value: string[]) => void;
 }
 
-const ToppingsCheckboxGroup = ({ name, options, value, onChange }: Props) => {
+const AddOnsCheckboxGroup = ({ name, options, value, onChange }: Props) => {
   return (
     <div>
       <div className="text-sm font-medium mb-2">{name}</div>
@@ -37,7 +37,7 @@ const ToppingsCheckboxGroup = ({ name, options, value, onChange }: Props) => {
                   onChange(newValue);
                 }}
               >
-                <div className="relative flex flex-col items-center justify-center p-2 gap-2">
+                <div className="relative flex flex-col items-center justify-between p-2 gap-2 h-28">
                   {value.includes(option.value) && (
                     <div className="absolute top-1 right-1">
                       <CircleCheck className="text-orange-500" />
@@ -47,7 +47,8 @@ const ToppingsCheckboxGroup = ({ name, options, value, onChange }: Props) => {
                     src={option.image}
                     alt={option.label}
                     width={50}
-                    height={50}
+                    height={60}
+                    className="object-contain"
                   />
                   <div>
                     <div>{option.label}</div>
@@ -63,4 +64,4 @@ const ToppingsCheckboxGroup = ({ name, options, value, onChange }: Props) => {
   );
 };
 
-export default ToppingsCheckboxGroup;
+export default AddOnsCheckboxGroup;

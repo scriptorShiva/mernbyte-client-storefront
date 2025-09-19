@@ -44,4 +44,11 @@ export interface Product {
   createdAt: string;
   updatedAt: string;
   imageUrl: string;
+  toppings: {
+    _id: string;
+    name: string;
+    image: string;
+    price: number;
+    tenantId: string;
+  }[];
 }
