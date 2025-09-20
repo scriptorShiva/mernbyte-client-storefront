@@ -7,9 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { MapPinHouse, ShoppingBasket } from "lucide-react";
+import { MapPinHouse } from "lucide-react";
 import Link from "next/link";
 import { Store } from "@/lib/types";
+import CartCounter from "./CartCounter";
 
 const Navbar = async () => {
   const storeRes = await fetch(
@@ -76,12 +77,7 @@ const Navbar = async () => {
               </Link>
             </li>
             <li className="relative">
-              <Link className="hover:text-primary" href={"/cart"}>
-                <ShoppingBasket />
-              </Link>
-              <span className="absolute -top-4 -right-4 h-6 bg-primary rounded-full text-white font-bold p-2 flex items-center justify-center text[2px]">
-                4
-              </span>
+              <CartCounter />
             </li>
             <li>
               <Link href={"/"} className="flex space-x-2 hover:text-primary">

@@ -91,7 +91,7 @@ const ProductList = () => {
   }, [activeCategory]);
 
   return (
-    <section className="container mx-auto my-10 px-[50px]">
+    <section className="container mx-auto my-10 px-[100px]">
       {isLoadingCategories ? (
         <p>Loading categories...</p>
       ) : (

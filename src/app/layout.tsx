@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/custom/Navbar";
+import StoreProvider from "./StoreProvider";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -20,12 +21,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${manrope.variable} antialiased`}>
-        <main>
-          <Navbar />
-          {children}
-        </main>
-      </body>
+      {/* we are wrapping StoreProvider here , so that it will be accessible to everywhere in the app */}
+      {/* In nextjs body is our server component and storeProvider is our client
+      component. In nextjs we have no problem in wrap server component with
+      client component it will not cause any issue. */}
+      <StoreProvider>
+        <body className={`${manrope.variable} antialiased`}>
+          <main>
+            <Navbar />
+            {children}
+          </main>
+        </body>
+      </StoreProvider>
     </html>
   );
 }

@@ -8,7 +8,7 @@ export default async function Home() {
     <>
       {/* section A */}
       <section className="bg-white">
-        <div className="container mx-auto flex items-center justify-between px-[50px]">
+        <div className="container mx-auto flex items-center justify-between px-[100px]">
           {/* left */}
           <div>
             <h1 className="text-6xl font-black font-sans">
