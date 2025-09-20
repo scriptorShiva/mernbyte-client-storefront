@@ -52,3 +52,10 @@ export interface Product {
     tenantId: string;
   }[];
 }
+
+export interface Topping {
+  _id?: string;
+  label: string;
+  image: string;
+  price: number;
+}

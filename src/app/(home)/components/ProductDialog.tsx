@@ -5,13 +5,32 @@ import { ShoppingCart } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RadioGroupSelector from "@/components/custom/RadioGroup";
 import Image from "next/image";
-import { Product } from "@/lib/types";
+import { Product, Topping } from "@/lib/types";
 
+type selectedCategories = {
+  [key: string]: string;
+};
 const ProductDialog = ({ product }: { product: Product }) => {
-  console.log(product.toppings);
-  const [size, setSize] = useState("");
+  const [selectedCategories, setSelectedCategories] =
+    useState<selectedCategories>({});
 
-  const [AddOns, setAddOns] = useState<string[]>([]);
+  const [AddOns, setAddOns] = useState<Topping[]>([]);
+
+  // methods
+  const handleSelectedCategories = (key: string, value: string) => {
+    setSelectedCategories((prev) => {
+      return {
+        ...prev,
+        [key]: value,
+      };
+    });
+  };
+
+  const handleSelectedAddOns = (value: Topping[]) => {
+    console.log(value, "vavvvv");
+    setAddOns(value);
+  };
+
   return (
     <div>
       {/* Dialog box */}
@@ -53,8 +72,11 @@ const ProductDialog = ({ product }: { product: Product }) => {
                             label: k,
                           })
                         )}
-                        value={size}
-                        onChange={setSize}
+                        defaultValue={value.availableOptions[0]}
+                        onChange={(value) =>
+                          handleSelectedCategories(key, value)
+                        }
+                        value={selectedCategories[key]}
                       />
                     </section>
                   )
@@ -65,13 +87,13 @@ const ProductDialog = ({ product }: { product: Product }) => {
                     <AddOnsCheckboxGroup
                       name="AddOns"
                       options={product.toppings.map((topping) => ({
-                        value: topping._id,
+                        _id: topping._id,
                         label: topping.name,
                         image: topping.image,
                         price: topping.price,
                       }))}
                       value={AddOns}
-                      onChange={setAddOns}
+                      onChange={handleSelectedAddOns}
                     />
                   </section>
                 )}
