@@ -30,7 +30,7 @@ const Navbar = async () => {
   const stores: { data: Store[] } = await storeRes.json();
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white shadow sticky top-0 z-50">
       <nav className="container mx-auto flex items-center justify-between py-4 px-[100px]">
         {/* left side */}
         <div className="flex items-center">

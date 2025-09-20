@@ -22,10 +22,9 @@ const RadioGroupSelector = ({
     <div className="space-y-2">
       <div className="text-sm font-medium">{name}</div>
       <RadioGroup
-        defaultValue={defaultValue}
         onValueChange={onChange}
         className="grid grid-cols-3 gap-4 mt-2"
-        value={value}
+        value={value || defaultValue}
       >
         <div className="flex items-center space-x-2">
           {options.map((option) => {

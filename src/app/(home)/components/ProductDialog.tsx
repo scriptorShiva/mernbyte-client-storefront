@@ -6,13 +6,29 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RadioGroupSelector from "@/components/custom/RadioGroup";
 import Image from "next/image";
 import { Product, Topping } from "@/lib/types";
+import { useAppDispatch } from "@/lib/store/hooks";
+import { addToCart } from "@/lib/store/features/cart/CartSlice";
 
 type selectedCategories = {
   [key: string]: string;
 };
 const ProductDialog = ({ product }: { product: Product }) => {
+  // dispatch
+  const dispatch = useAppDispatch();
+
+  // default categories fetch
+  const defaultCategory = Object.entries(product.category.priceConfiguration)
+    .map(([key, value]) => {
+      return {
+        [key]: value.availableOptions[0],
+      };
+    })
+    .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+
   const [selectedCategories, setSelectedCategories] =
-    useState<selectedCategories>({});
+    useState<selectedCategories>(
+      defaultCategory as unknown as selectedCategories
+    );
 
   const [AddOns, setAddOns] = useState<Topping[]>([]);
 
@@ -29,6 +45,20 @@ const ProductDialog = ({ product }: { product: Product }) => {
   const handleSelectedAddOns = (value: Topping[]) => {
     console.log(value, "vavvvv");
     setAddOns(value);
+  };
+
+  const handleAddToCart = (product: Product) => {
+    // add to cart logic
+    // item to add
+    const itemToAdd = {
+      product,
+      chosenConfiguration: {
+        priceConfiguration: selectedCategories,
+        selectedToppings: AddOns,
+      },
+      quantity: 1,
+    };
+    dispatch(addToCart(itemToAdd));
   };
 
   return (
@@ -72,7 +102,7 @@ const ProductDialog = ({ product }: { product: Product }) => {
                             label: k,
                           })
                         )}
-                        defaultValue={value.availableOptions[0]}
+                        defaultValue={Object.keys(value.availableOptions)[0]}
                         onChange={(value) =>
                           handleSelectedCategories(key, value)
                         }
@@ -105,7 +135,11 @@ const ProductDialog = ({ product }: { product: Product }) => {
                   <span className="font-medium"> ₹{100}</span>
                 </div>
                 <div>
-                  <Button size={"sm"} className="cursor-pointer">
+                  <Button
+                    size={"sm"}
+                    className="cursor-pointer"
+                    onClick={() => handleAddToCart(product)}
+                  >
                     <ShoppingCart />
                     <span className="font-medium">Add to Cart</span>
                   </Button>
