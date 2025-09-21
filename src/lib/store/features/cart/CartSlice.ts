@@ -35,21 +35,33 @@ export const cartSlice = createSlice({
     // },
     // In action we will send the payload data
     addToCart: (state, action: PayloadAction<CartItem>) => {
-      return {
-        cartItems: [
-          ...state.cartItems,
-          {
-            product: action.payload.product,
-            chosenConfiguration: action.payload.chosenConfiguration,
-            quantity: action.payload.quantity,
-          },
-        ],
+      // add item to localstorage
+      window.localStorage.setItem(
+        "cartItems",
+        JSON.stringify([...state.cartItems, action.payload])
+      );
+
+      const itemToAdd = {
+        product: action.payload.product,
+        chosenConfiguration: action.payload.chosenConfiguration,
+        quantity: action.payload.quantity,
       };
+
+      // now add to the redux store
+      return {
+        cartItems: [...state.cartItems, itemToAdd],
+      };
+    },
+    setInitialCartUsingLocalStorage: (
+      state,
+      action: PayloadAction<CartItem[]>
+    ) => {
+      state.cartItems.push(...action.payload);
     },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, setInitialCartUsingLocalStorage } = cartSlice.actions;
 
 export default cartSlice.reducer;

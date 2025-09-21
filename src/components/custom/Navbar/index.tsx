@@ -10,11 +10,13 @@ import {
 import { MapPinHouse } from "lucide-react";
 import Link from "next/link";
 import { Store } from "@/lib/types";
-import CartCounter from "./CartCounter";
+import dynamic from "next/dynamic";
+
+const CartCounterComponentWithoutSSR = dynamic(() => import("./CartCounter"));
 
 const Navbar = async () => {
   const storeRes = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/kong/api/auth/tenants`,
+    `${process.env.BACKEND_URL}/kong/api/auth/tenants`,
     {
       next: {
         revalidate: 3600, // 1hour
@@ -77,7 +79,7 @@ const Navbar = async () => {
               </Link>
             </li>
             <li className="relative">
-              <CartCounter />
+              <CartCounterComponentWithoutSSR />
             </li>
             <li>
               <Link href={"/"} className="flex space-x-2 hover:text-primary">
