@@ -9,6 +9,7 @@ import { Product, Topping } from "@/lib/types";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart } from "@/lib/store/features/cart/CartSlice";
 import { hashTheCartValues } from "@/lib/utils";
+import { notify } from "@/components/custom/Toast";
 
 type selectedCategories = {
   [key: string]: string;
@@ -19,6 +20,9 @@ const ProductDialog = ({ product }: { product: Product }) => {
 
   // getting the cart values
   const cartItems = useAppSelector((state) => state.cart.cartItems);
+
+  // state
+  const [setDialogOpen, setDialogOpenState] = useState(false);
 
   // default categories fetch
   const defaultCategory = Object.entries(product.category.priceConfiguration)
@@ -77,6 +81,15 @@ const ProductDialog = ({ product }: { product: Product }) => {
       quantity: 1,
     };
     dispatch(addToCart(itemToAdd));
+
+    // close dialog
+    setDialogOpenState(false);
+
+    // clear selected addons
+    setAddOns([]);
+
+    // add tost message
+    notify.success("Item added to cart");
   };
 
   const isCartWithValuesAlreadyExist = useMemo(() => {
@@ -97,7 +110,7 @@ const ProductDialog = ({ product }: { product: Product }) => {
   return (
     <div>
       {/* Dialog box */}
-      <Dialog>
+      <Dialog open={setDialogOpen} onOpenChange={setDialogOpenState}>
         <div className="flex justify-end mx-2">
           <DialogTrigger className="rounded-full bg-orange-200 hover:bg-orange-300 text-orange-500 px-6 py-2 shadow hover:shadow-lg hover:text-white cursor-pointer outline-none ease-linear transition-all duration-100 w-full ">
             Order Now
@@ -184,8 +197,8 @@ const ProductDialog = ({ product }: { product: Product }) => {
                     )}
                     <span className="font-medium">
                       {isCartWithValuesAlreadyExist
-                        ? "Update Cart"
-                        : "Go to Cart"}
+                        ? "Go to Cart"
+                        : "Add to Cart"}
                     </span>
                   </Button>
                 </div>

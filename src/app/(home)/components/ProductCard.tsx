@@ -13,6 +13,7 @@ import {
 
 import { Product } from "@/lib/types";
 import ProductDialog from "./ProductDialog";
+import { getMinProductPrice } from "@/lib/utils";
 
 type PropTypes = {
   product: Product;
@@ -40,7 +41,10 @@ const ProductCard = ({ product }: PropTypes) => {
         <CardFooter className="flex justify-between">
           <p>
             <span className="text-sm">Starting from : </span>
-            <span className="font-bold text-xl "> ₹{100}</span>
+            <span className="font-bold text-xl ">
+              {" "}
+              ₹{getMinProductPrice(product)}
+            </span>
           </p>
         </CardFooter>
 
