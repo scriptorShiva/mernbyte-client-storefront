@@ -1,4 +1,5 @@
 import { Product, Topping } from "@/lib/types";
+import { hashTheCartValues } from "@/lib/utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface CartItem {
@@ -10,6 +11,7 @@ export interface CartItem {
     selectedToppings: Topping[];
   };
   quantity: number;
+  hash?: string;
 }
 
 export interface CartState {
@@ -35,16 +37,20 @@ export const cartSlice = createSlice({
     // },
     // In action we will send the payload data
     addToCart: (state, action: PayloadAction<CartItem>) => {
+      // Before add it to the cart. We will hash it and store it with the hash in localstorage
+      const hash = hashTheCartValues(action.payload);
+      const itemWithHash = { ...action.payload, hash };
       // add item to localstorage
       window.localStorage.setItem(
         "cartItems",
-        JSON.stringify([...state.cartItems, action.payload])
+        JSON.stringify([...state.cartItems, itemWithHash])
       );
 
       const itemToAdd = {
         product: action.payload.product,
         chosenConfiguration: action.payload.chosenConfiguration,
         quantity: action.payload.quantity,
+        hash: hash,
       };
 
       // now add to the redux store

@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import AddOnsCheckboxGroup from "./AddOnsCheckboxGroup";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { CircleCheckBig, ShoppingCart } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RadioGroupSelector from "@/components/custom/RadioGroup";
 import Image from "next/image";
 import { Product, Topping } from "@/lib/types";
-import { useAppDispatch } from "@/lib/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart } from "@/lib/store/features/cart/CartSlice";
+import { hashTheCartValues } from "@/lib/utils";
 
 type selectedCategories = {
   [key: string]: string;
@@ -15,6 +16,9 @@ type selectedCategories = {
 const ProductDialog = ({ product }: { product: Product }) => {
   // dispatch
   const dispatch = useAppDispatch();
+
+  // getting the cart values
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
 
   // default categories fetch
   const defaultCategory = Object.entries(product.category.priceConfiguration)
@@ -58,7 +62,6 @@ const ProductDialog = ({ product }: { product: Product }) => {
   };
 
   const handleSelectedAddOns = (value: Topping[]) => {
-    console.log(value, "vavvvv");
     setAddOns(value);
   };
 
@@ -75,6 +78,21 @@ const ProductDialog = ({ product }: { product: Product }) => {
     };
     dispatch(addToCart(itemToAdd));
   };
+
+  const isCartWithValuesAlreadyExist = useMemo(() => {
+    const currentConfiguration = {
+      product: product,
+      chosenConfiguration: {
+        priceConfiguration: selectedCategories,
+        selectedToppings: AddOns,
+      },
+      quantity: 1,
+    };
+
+    const hashCurrentConfig = hashTheCartValues(currentConfiguration);
+
+    return cartItems.some((item) => item.hash === hashCurrentConfig);
+  }, [product, selectedCategories, AddOns, cartItems]);
 
   return (
     <div>
@@ -152,11 +170,23 @@ const ProductDialog = ({ product }: { product: Product }) => {
                 <div>
                   <Button
                     size={"sm"}
-                    className="cursor-pointer"
+                    className={`cursor-pointer flex items-center space-x-2 transition-all ${
+                      isCartWithValuesAlreadyExist
+                        ? "bg-green-500 hover:bg-green-600"
+                        : ""
+                    }`}
                     onClick={() => handleAddToCart(product)}
                   >
-                    <ShoppingCart />
-                    <span className="font-medium">Add to Cart</span>
+                    {isCartWithValuesAlreadyExist ? (
+                      <CircleCheckBig />
+                    ) : (
+                      <ShoppingCart />
+                    )}
+                    <span className="font-medium">
+                      {isCartWithValuesAlreadyExist
+                        ? "Update Cart"
+                        : "Go to Cart"}
+                    </span>
                   </Button>
                 </div>
               </section>
