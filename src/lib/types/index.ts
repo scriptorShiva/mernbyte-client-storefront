@@ -13,6 +13,15 @@ export interface PriceConfiguration {
   };
 }
 
+export interface ProductPriceConfiguration {
+  [key: string]: {
+    priceType: "base" | "additional";
+    availableOptions: {
+      [key: string]: number;
+    };
+  };
+}
+
 export interface Attributes {
   name: string;
   widgetType: "text" | "radio" | "checkbox" | "switch";
@@ -37,7 +46,7 @@ export interface Product {
   name: string;
   description: string;
   image: string;
-  priceConfiguration: PriceConfiguration;
+  priceConfiguration: ProductPriceConfiguration;
   category: Category;
   attributes: ProductAttribute[];
   isPublished: boolean;

@@ -32,6 +32,21 @@ const ProductDialog = ({ product }: { product: Product }) => {
 
   const [AddOns, setAddOns] = useState<Topping[]>([]);
 
+  // using useMemo for compute the price not on each render but only on dependency change. (Memoise) --> It has its own cost
+  const totalPrice = React.useMemo(() => {
+    const addOnsTotalPrice = AddOns.reduce((acc, curr) => acc + curr.price, 0);
+    const categoriesTotalPrice = Object.entries(selectedCategories).reduce(
+      (acc, [key, value]: [string, string]) => {
+        const category = product?.priceConfiguration[key];
+        const selectedOptionPrice = category?.availableOptions[value];
+        return acc + selectedOptionPrice;
+      },
+      0
+    );
+
+    return categoriesTotalPrice + addOnsTotalPrice;
+  }, [AddOns, selectedCategories, product.priceConfiguration]);
+
   // methods
   const handleSelectedCategories = (key: string, value: string) => {
     setSelectedCategories((prev) => {
@@ -132,7 +147,7 @@ const ProductDialog = ({ product }: { product: Product }) => {
               <section className="mt-8 mb-4 flex justify-between align-center">
                 <div>
                   <span className="font-medium">Price:</span>
-                  <span className="font-medium"> ₹{100}</span>
+                  <span className="font-medium"> ₹{totalPrice}</span>
                 </div>
                 <div>
                   <Button
