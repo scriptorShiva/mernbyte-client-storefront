@@ -1,16 +1,10 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { MapPinHouse } from "lucide-react";
 import Link from "next/link";
 import { Store } from "@/lib/types";
 import dynamic from "next/dynamic";
+import StoreSelect from "./StoreSelect";
 
 const CartCounterComponentWithoutSSR = dynamic(() => import("./CartCounter"));
 
@@ -47,22 +41,7 @@ const Navbar = async () => {
             <span className="text-primary">monk</span>Market
           </span>
           <div className="px-4">
-            <Select>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Stores" />
-              </SelectTrigger>
-              <SelectContent>
-                {stores.data.map((store: Store) => (
-                  <SelectItem
-                    className="cursor-pointer"
-                    key={store.id}
-                    value={store.id}
-                  >
-                    {store.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <StoreSelect stores={stores} />
           </div>
         </div>
         {/* right side */}

@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/pagination";
 
 const PAGE_SIZE = 8;
-const ProductList = () => {
+const ProductList = ({ storeId }: { storeId: string }) => {
   // states
   const [activeCategory, setActiveCategory] = useState("all");
   const [categories, setCategories] = useState<Category[]>([]);
@@ -57,9 +57,10 @@ const ProductList = () => {
         limit: PAGE_SIZE.toString(),
       });
 
-      console.log("params", params);
-
       if (categoryId !== "all") params.append("categoryId", categoryId);
+      if (storeId) {
+        params.append("tenantId", storeId);
+      }
 
       const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/kong/api/catalog/products?${params}`;
 
@@ -83,7 +84,9 @@ const ProductList = () => {
   // Load products whenever activeCategory changes or page changes
   useEffect(() => {
     fetchProducts(activeCategory, page);
-  }, [activeCategory, page]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategory, page, storeId]);
 
   // Reset page to 1 when switching categories
   useEffect(() => {

@@ -3,7 +3,11 @@ import { Button } from "@/components/ui/button";
 import ProductList from "./components/ProductList";
 import { Suspense } from "react";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { storeId: string };
+}) {
   return (
     <>
       {/* section A */}
@@ -34,7 +38,7 @@ export default async function Home() {
 
       {/* section B */}
       <Suspense fallback={<div>Loading...</div>}>
-        <ProductList />
+        <ProductList storeId={searchParams.storeId} />
       </Suspense>
     </>
   );
