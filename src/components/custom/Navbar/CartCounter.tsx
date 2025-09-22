@@ -8,7 +8,11 @@ import React from "react";
 
 const CartCounter = () => {
   // As dispatch thing we already did on ProductDialog component here, we only use it here to get the data from the store
-  const cartItemsCount = useAppSelector((state) => state.cart.cartItems.length);
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const cartItemsCount = cartItems.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
 
   return (
     <>

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import AddOnsCheckboxGroup from "./AddOnsCheckboxGroup";
 import { Button } from "@/components/ui/button";
-import { CircleCheckBig, ShoppingCart } from "lucide-react";
+import { Forward, ShoppingCart } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RadioGroupSelector from "@/components/custom/RadioGroup";
 import Image from "next/image";
@@ -11,6 +11,7 @@ import { addToCart } from "@/lib/store/features/cart/CartSlice";
 import { hashTheCartValues } from "@/lib/utils";
 import { notify } from "@/components/custom/Toast";
 import { useTotalCart } from "@/lib/hooks/useTotalCart";
+import { useRouter } from "next/navigation";
 
 type selectedCategories = {
   [key: string]: string;
@@ -24,6 +25,9 @@ const ProductDialog = ({ product }: { product: Product }) => {
 
   // state
   const [setDialogOpen, setDialogOpenState] = useState(false);
+
+  // hook navigate
+  const router = useRouter();
 
   // default categories fetch
   const defaultCategory = Object.entries(product.category.priceConfiguration)
@@ -192,26 +196,26 @@ const ProductDialog = ({ product }: { product: Product }) => {
                   <span className="font-medium"> ₹{totalPrice}</span>
                 </div>
                 <div>
-                  <Button
-                    size={"sm"}
-                    className={`cursor-pointer flex items-center space-x-2 transition-all ${
-                      isCartWithValuesAlreadyExist
-                        ? "bg-green-500 hover:bg-green-600"
-                        : ""
-                    }`}
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    {isCartWithValuesAlreadyExist ? (
-                      <CircleCheckBig />
-                    ) : (
+                  {isCartWithValuesAlreadyExist ? (
+                    <Button
+                      size={"sm"}
+                      className={`cursor-pointer flex items-center space-x-2 transition-all ${"bg-green-500 hover:bg-green-600"}`}
+                      onClick={() => router.push("/cart")}
+                    >
+                      <span className="font-medium">Go to Cart</span>
+                      <Forward />
+                    </Button>
+                  ) : (
+                    <Button
+                      size={"sm"}
+                      className={`cursor-pointer flex items-center space-x-2 transition-all`}
+                      onClick={() => handleAddToCart(product)}
+                    >
                       <ShoppingCart />
-                    )}
-                    <span className="font-medium">
-                      {isCartWithValuesAlreadyExist
-                        ? "Go to Cart"
-                        : "Add to Cart"}
-                    </span>
-                  </Button>
+
+                      <span className="font-medium">Add to Cart</span>
+                    </Button>
+                  )}
                 </div>
               </section>
             </div>
