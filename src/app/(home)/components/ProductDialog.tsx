@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { addToCart } from "@/lib/store/features/cart/CartSlice";
 import { hashTheCartValues } from "@/lib/utils";
 import { notify } from "@/components/custom/Toast";
+import { useTotalCart } from "@/lib/hooks/useTotalCart";
 
 type selectedCategories = {
   [key: string]: string;
@@ -40,20 +41,30 @@ const ProductDialog = ({ product }: { product: Product }) => {
 
   const [AddOns, setAddOns] = useState<Topping[]>([]);
 
-  // using useMemo for compute the price not on each render but only on dependency change. (Memoise) --> It has its own cost
-  const totalPrice = React.useMemo(() => {
-    const addOnsTotalPrice = AddOns.reduce((acc, curr) => acc + curr.price, 0);
-    const categoriesTotalPrice = Object.entries(selectedCategories).reduce(
-      (acc, [key, value]: [string, string]) => {
-        const category = product?.priceConfiguration[key];
-        const selectedOptionPrice = category?.availableOptions[value];
-        return acc + selectedOptionPrice;
-      },
-      0
-    );
+  // // using useMemo for compute the price not on each render but only on dependency change. (Memoise) --> It has its own cost
+  // const totalPrice = React.useMemo(() => {
+  //   const addOnsTotalPrice = AddOns.reduce((acc, curr) => acc + curr.price, 0);
+  //   const categoriesTotalPrice = Object.entries(selectedCategories).reduce(
+  //     (acc, [key, value]: [string, string]) => {
+  //       const category = product?.priceConfiguration[key];
+  //       const selectedOptionPrice = category?.availableOptions[value];
+  //       return acc + selectedOptionPrice;
+  //     },
+  //     0
+  //   );
 
-    return categoriesTotalPrice + addOnsTotalPrice;
-  }, [AddOns, selectedCategories, product.priceConfiguration]);
+  //   return categoriesTotalPrice + addOnsTotalPrice;
+  // }, [AddOns, selectedCategories, product.priceConfiguration]);
+
+  // we have replaced the above logic with custom hook as its a reusable item
+  const totalPrice = useTotalCart({
+    product,
+    chosenConfiguration: {
+      priceConfiguration: selectedCategories,
+      selectedToppings: AddOns,
+    },
+    quantity: 0,
+  });
 
   // methods
   const handleSelectedCategories = (key: string, value: string) => {

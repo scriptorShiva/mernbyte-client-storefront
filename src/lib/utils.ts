@@ -27,3 +27,23 @@ export const getMinProductPrice = (product: Product): number => {
 
   return total;
 };
+
+export const calculateCartItemTotal = (
+  selectedProductConfig: CartItem,
+  quantity: number
+): number => {
+  const addOnsTotalPrice =
+    selectedProductConfig.chosenConfiguration.selectedToppings.reduce(
+      (acc, curr) => acc + curr.price,
+      0
+    );
+  const categoriesTotalPrice = Object.entries(
+    selectedProductConfig.chosenConfiguration.priceConfiguration
+  ).reduce((acc, [key, value]: [string, string]) => {
+    const category = selectedProductConfig.product?.priceConfiguration[key];
+    const selectedOptionPrice = category?.availableOptions[value];
+    return acc + selectedOptionPrice;
+  }, 0);
+
+  return (categoriesTotalPrice + addOnsTotalPrice) * quantity;
+};

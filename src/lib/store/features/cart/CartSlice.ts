@@ -40,6 +40,7 @@ export const cartSlice = createSlice({
       // Before add it to the cart. We will hash it and store it with the hash in localstorage
       const hash = hashTheCartValues(action.payload);
       const itemWithHash = { ...action.payload, hash };
+
       // add item to localstorage
       window.localStorage.setItem(
         "cartItems",
@@ -58,16 +59,49 @@ export const cartSlice = createSlice({
         cartItems: [...state.cartItems, itemToAdd],
       };
     },
+
     setInitialCartUsingLocalStorage: (
       state,
       action: PayloadAction<CartItem[]>
     ) => {
       state.cartItems.push(...action.payload);
     },
+
+    changeCartItemQty: (
+      state,
+      action: PayloadAction<{ hash: string; qty: number }>
+    ) => {
+      // we will check if current item hash matches with the hash in the action payload and if it matches then we will update the quantity
+      const itemIdx = state.cartItems.findIndex(
+        (item) => item.hash === action.payload.hash
+      );
+
+      if (action.payload.qty === 0) {
+        state.cartItems.splice(itemIdx, 1);
+        // remove from local storage
+        window.localStorage.setItem(
+          "cartItems",
+          JSON.stringify(state.cartItems)
+        );
+        return;
+      }
+      /**
+       * 1 --> 0+1 = 1
+       * -1 --> -1 + 1 = 0
+       */
+      if (itemIdx !== -1) {
+        const newQty = state.cartItems[itemIdx].quantity + action.payload.qty;
+        state.cartItems[itemIdx].quantity = newQty > 0 ? newQty : 1; // optional: prevent 0
+      }
+
+      // add in local storage
+      window.localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { addToCart, setInitialCartUsingLocalStorage } = cartSlice.actions;
+export const { addToCart, setInitialCartUsingLocalStorage, changeCartItemQty } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;
